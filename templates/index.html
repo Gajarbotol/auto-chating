@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Conversation</title
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #conversation { padding: 20px; max-height: 400px; overflow-y: auto; border: 1px solid #ccc; }
+        .message { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>API Conversation</h1>
+    <div id="conversation"></div>
+    <button onclick="stopConversation()">Stop Conversation</button>
+
+    <script>
+        async function fetchConversation() {
+            const response = await fetch("/conversation");
+            const data = await response.json();
+            const conversationDiv = document.getElementById("conversation");
+            conversationDiv.innerHTML = data.map(msg => `<div class="message">${msg}</div>`).join("");
+            conversationDiv.scrollTop = conversationDiv.scrollHeight;
+        }
+
+        function stopConversation() {
+            fetch("/stop", { method: "POST" }).then(() => alert("Conversation stopped"));
+        }
+
+        // Fetch conversation every 3 seconds
+        setInterval(fetchConversation, 3000);
+    </script>
+</body>
+</html>
