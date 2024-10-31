@@ -3,6 +3,7 @@ import requests
 import threading
 import time
 import re
+import os
 
 app = Flask(__name__)
 
@@ -15,8 +16,8 @@ topic = "Let's talk about the future of AI and technology."
 conversation_log = []
 is_running = True
 
-# Define your Render app's own URL for self-pinging (update this after deployment)
-SELF_PING_URL = "http://localhost:5000/ping"  # Replace with your deployed URL on Render
+# Define your Render app's own URL for self-pinging
+SELF_PING_URL = "https://auto-chating.onrender.com/ping"
 
 def clean_response(text):
     """Remove <split></split> tags from the response text."""
@@ -92,6 +93,9 @@ def ping():
     return "pong"
 
 if __name__ == "__main__":
+    # Get the port from environment variables
+    port = int(os.environ.get("PORT", 5000))
+    
     # Start the conversation and auto-ping in separate background threads
     conversation_thread = threading.Thread(target=run_conversation, daemon=True)
     conversation_thread.start()
@@ -100,4 +104,4 @@ if __name__ == "__main__":
     ping_thread.start()
 
     # Run the Flask app
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=port)
